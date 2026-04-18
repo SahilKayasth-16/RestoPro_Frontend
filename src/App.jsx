@@ -6,6 +6,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import KitchenDashboard from './pages/KitchenDashboard';
 import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoutes';
 
 function App() {
   return (
@@ -18,6 +19,22 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/kitchen" element={<KitchenDashboard />} />
           <Route path="/track-order/:orderId" element={<OrderTracking />} />
+          <Route 
+            path="/admin/dashboard" 
+            element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/kitchen" 
+            element={
+            <ProtectedRoute>
+              <KitchenDashboard />
+            </ProtectedRoute>
+            } 
+          />
         </Routes>
       </main>
     </div>

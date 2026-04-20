@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/axiosconfig';
 import { io } from 'socket.io-client';
 import { CheckCircle2, Circle, Clock, Check, Download, CreditCard } from 'lucide-react';
 
@@ -15,7 +15,7 @@ const OrderTracking = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/api/orders/${orderId}`);
+        const { data } = await API.get('/api/orders/${orderId}');
         setOrder(data);
       } catch (error) {
         console.error('Error fetching order:', error);
@@ -57,7 +57,7 @@ const OrderTracking = () => {
       setPaymentLoading(true);
 
       // Step 1: Create order from backend
-      const { data } = await axios.post(`${API_URL}/api/payment/create-order/${order._id}`);
+      const { data } = await API.post(`${API_URL}/api/payment/create-order/${order._id}`);
 
       if (!window.Razorpay) {
         alert("Razorpay SDK not loaded");
@@ -74,7 +74,7 @@ const OrderTracking = () => {
 
         handler: async function (response) {
           // Step 2: Verify payment
-          await axios.post(`${API_URL}/api/payment/verify`, {
+          await API.post(`${API_URL}/api/payment/verify`, {
             ...response,
             orderId: order._id
           });

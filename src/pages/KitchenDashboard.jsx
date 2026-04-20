@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../utils/axiosconfig';
 import { io } from 'socket.io-client';
 import { Clock, CheckCircle2, Flame, Bell, ChevronRight } from 'lucide-react';
 
@@ -29,7 +29,7 @@ const KitchenDashboard = () => {
 
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/api/orders`, authConfig);
+      const { data } = await API.get('/api/orders', authConfig);
       // Filter out 'Served' orders for the kitchen view, or just show them at the bottom
       setOrders(data);
       setLoading(false);
@@ -41,7 +41,7 @@ const KitchenDashboard = () => {
 
   const updateStatus = async (orderId, newStatus) => {
     try {
-      await axios.put(`${API_URL}/api/orders/${orderId}/status`, { status: newStatus }, authConfig);
+      await API.put(`${API_URL}/api/orders/${orderId}/status`, { status: newStatus }, authConfig);
       setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status: newStatus } : o));
     } catch (error) {
       alert('Failed to update status');

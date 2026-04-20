@@ -27,7 +27,7 @@ const MenuPage = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/api/menu`);
+        const { data } = await API.get('/api/menu');
         setMenu(data);
         setLoading(false);
       } catch (error) {
@@ -54,7 +54,7 @@ const MenuPage = () => {
 
   const fetchPastOrders = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/api/orders/table/${tableId}`);
+      const { data } = await API.get('/api/orders/table/${tableId}');
       setPastOrders(data);
     } catch (error) {
       console.error('Error fetching past orders:', error);
@@ -88,7 +88,7 @@ const MenuPage = () => {
     if (cart.length === 0) return alert('Your cart is empty');
 
     try {
-      const { data } = await axios.post(`${API_URL}/api/orders`, {
+      const { data } = await API.post(`${API_URL}/api/orders`, {
         tableId,
         items: cart.map(item => ({
           menuItem: item._id,

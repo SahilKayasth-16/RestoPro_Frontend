@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../utils/axiosconfig';
 import {
   Plus, Search, Edit2, Trash2, Power, DollarSign,
   ShoppingBag, Star, RefreshCw, Upload, Link, Image, X, LogOut, IndianRupee
@@ -32,8 +32,8 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       const [menuRes, statsRes] = await Promise.all([
-        axios.get(`${API_URL}/api/menu`),
-        axios.get(`${API_URL}/api/orders/stats`, authConfig)
+        API.get('/api/menu'),
+        API.get('/api/orders/stats', authConfig)
       ]);
       setMenu(menuRes.data);
       setStats(statsRes.data);
@@ -58,7 +58,7 @@ const AdminDashboard = () => {
   const addItem = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/menu`, newItem, authConfig);
+      await API.post(`${API_URL}/api/menu`, newItem, authConfig);
       setShowAddModal(false);
       setNewItem({ name: '', price: '', category: 'Starters', description: '', image: '' });
       fetchData();
@@ -69,13 +69,13 @@ const AdminDashboard = () => {
 
   const deleteItem = async (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
-      await axios.delete(`${API_URL}/api/menu/${id}`, authConfig);
+      await API.delete(`${API_URL}/api/menu/${id}`, authConfig);
       fetchData();
     }
   };
 
   const toggleItem = async (id) => {
-    await axios.patch(`${API_URL}/api/menu/${id}/toggle`, {}, authConfig);
+    await API.patch(`${API_URL}/api/menu/${id}/toggle`, {}, authConfig);
     fetchData();
   };
 

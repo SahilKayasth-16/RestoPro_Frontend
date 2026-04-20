@@ -16,8 +16,6 @@ function App() {
         <Routes>
           <Route path="/" element={<MenuPage />} />
           <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/kitchen" element={<KitchenDashboard />} />
           <Route path="/track-order/:orderId" element={<OrderTracking />} />
           <Route 
             path="/admin/dashboard" 

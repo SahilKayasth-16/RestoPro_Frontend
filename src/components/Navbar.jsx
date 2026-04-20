@@ -11,7 +11,7 @@ const Navbar = () => {
 
     // Not logged in
     if (!token) {
-      alert("Please login first");
+      alert("It is for internal use only.");
       navigate('/admin/login');
       return;
     }

@@ -1,34 +1,21 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
 
+  //  Not logged in
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/admin/login" replace />;
   }
 
-  try {
-    const decoded = jwtDecode(token);
-
-    // Check expiry
-    if (decoded.exp * 1000 < Date.now()) {
-      localStorage.clear();
-      return <Navigate to="/login" />;
-    }
-
-    // Check role
-    if (!allowedRoles.includes(decoded.role)) {
-      return <Navigate to="/" />;
-    }
-
-    return children;
-
-  } catch (error) {
-    localStorage.clear();
-    return <Navigate to="/login" />;
+  //  Wrong role
+  if (!allowedRoles.includes(role)) {
+    alert("It is for internal use only");
+    return <Navigate to="/" replace />;
   }
+
+  return children;
 };
 
 export default ProtectedRoute;

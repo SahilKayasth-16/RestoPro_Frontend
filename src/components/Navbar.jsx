@@ -12,13 +12,12 @@ const Navbar = () => {
     // Not logged in
     if (!token) {
       alert("It is for internal use only.");
-      navigate('/admin/login');
       return;
     }
 
     // Wrong role
     if (!allowedRoles.includes(role)) {
-      alert("It is for internal use only");
+      alert("You are not authorized to access admin panel.");
       return;
     }
 

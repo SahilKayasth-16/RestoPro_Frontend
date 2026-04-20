@@ -10,6 +10,29 @@ import { io } from 'socket.io-client';
 const API_URL = import.meta.env.VITE_API_URL || '';
 const socket = io(API_URL || window.location.origin);
 
+const MenuSkeleton = () => {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <div key={i} className="bg-white rounded-[2rem] overflow-hidden border border-slate-100 flex flex-col h-full">
+          <div className="h-48 skeleton" />
+          <div className="p-6 flex-1 flex flex-col space-y-4">
+            <div className="flex justify-between items-start">
+              <div className="h-6 w-32 skeleton rounded-lg" />
+              <div className="h-6 w-12 skeleton rounded-lg" />
+            </div>
+            <div className="space-y-2 flex-1">
+              <div className="h-4 w-full skeleton rounded-md" />
+              <div className="h-4 w-2/3 skeleton rounded-md" />
+            </div>
+            <div className="h-12 w-full skeleton rounded-2xl" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const MenuPage = () => {
   const [menu, setMenu] = useState([]);
   const [categories, setCategories] = useState(['All', 'Starters', 'Main Course', 'Desserts', 'Beverages']);
@@ -166,7 +189,7 @@ const MenuPage = () => {
 
       {/* Menu Grid */}
       {loading ? (
-        <div className="text-center py-20 text-slate-400">Loading menu...</div>
+        <MenuSkeleton />
       ) : filteredMenu.length === 0 ? (
         <div className="text-center py-24 bg-white/50 rounded-[3rem] border-2 border-dashed border-slate-200 animate-in fade-in zoom-in duration-500">
           <div className="w-20 h-20 bg-slate-100 text-slate-400 rounded-3xl flex items-center justify-center mx-auto mb-6">

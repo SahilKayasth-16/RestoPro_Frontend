@@ -4,14 +4,27 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
 
-  //  Not logged in
+  // No token
   if (!token) {
     return <Navigate to="/admin/login" replace />;
   }
 
-  //  Wrong role
+  // Validate token structure + expiry
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    if (!payload.exp || payload.exp * 1000 < Date.now()) {
+      localStorage.clear();
+      return <Navigate to="/admin/login" replace />;
+    }
+
+  } catch (err) {
+    localStorage.clear();
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  // Wrong role
   if (!allowedRoles.includes(role)) {
-    alert("It is for internal use only");
     return <Navigate to="/" replace />;
   }
 

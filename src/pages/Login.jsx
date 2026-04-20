@@ -15,11 +15,27 @@ const Login = () => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
-    if (token && role === 'admin') {
-      navigate('/admin/dashboard');
-    } else if (token && role === 'kitchen') {
-      navigate('/kitchen');
+    if (!token) return;
+
+    // Basic sanity check (prevents garbage redirect)
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      if (!payload.exp || payload.exp * 1000 < Date.now()) {
+        localStorage.clear();
+        return;
+      }
+
+      if (role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (role === 'kitchen') {
+        navigate('/kitchen');
+      }
+
+    } catch (err) {
+      localStorage.clear();
     }
+
   }, []);
 
   const handleLogin = async (e) => {

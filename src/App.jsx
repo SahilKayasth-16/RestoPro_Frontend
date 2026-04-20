@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MenuPage from './pages/MenuPage';
 import OrderTracking from './pages/OrderTracking';
-import AdminLogin from './pages/AdminLogin';
+import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import KitchenDashboard from './pages/KitchenDashboard';
 import Navbar from './components/Navbar';
@@ -15,14 +15,14 @@ function App() {
       <main className="container mx-auto px-4 py-8">
         <Routes>
           <Route path="/" element={<MenuPage />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/login" element={<Login />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/kitchen" element={<KitchenDashboard />} />
           <Route path="/track-order/:orderId" element={<OrderTracking />} />
           <Route 
             path="/admin/dashboard" 
             element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['admin']}>
               <AdminDashboard />
             </ProtectedRoute>
             } 
@@ -30,7 +30,7 @@ function App() {
           <Route 
             path="/kitchen" 
             element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['kitchen']}>
               <KitchenDashboard />
             </ProtectedRoute>
             } 

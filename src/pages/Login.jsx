@@ -5,23 +5,46 @@ import { Lock, User, LogIn, ArrowLeft } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
-const AdminLogin = () => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+
+    if (token && role === 'admin') {
+      navigate('/admin/dashboard');
+    } else if (token && role === 'kitchen') {
+      navigate('/kitchen');
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const { data } = await axios.post(`${API_URL}/api/auth/login`, { username, password });
-      localStorage.setItem('adminToken', data.token);
-      navigate('/admin/dashboard');
+     
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.role);
+
+      if (data.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (data.role === 'kitchen') {
+        navigate('/kitchen');
+      } else {
+        navigate('/');
+      }
+
     } catch (error) {
       alert(error.response?.data?.message || 'Login failed');
+
     } finally {
       setLoading(false);
+
     }
   };
 
@@ -92,4 +115,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default Login;

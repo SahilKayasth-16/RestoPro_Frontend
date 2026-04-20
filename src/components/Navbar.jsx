@@ -26,7 +26,7 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <Link to="/admin/login" className="text-slate-600 hover:text-primary-600 flex items-center gap-1">
+            <Link to="/login" className="text-slate-600 hover:text-primary-600 flex items-center gap-1">
               <LayoutDashboard className="w-5 h-5" />
               Admin
             </Link>

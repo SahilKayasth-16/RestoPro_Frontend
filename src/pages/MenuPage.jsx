@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../utils/axiosconfig';
 import {
   ShoppingCart, Table, Plus, Minus, X,
   History, Truck, AlertCircle, Clock, CheckCircle2

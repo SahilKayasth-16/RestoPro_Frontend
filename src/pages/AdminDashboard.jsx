@@ -81,7 +81,7 @@ const AdminDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
-    navigate('/');
+    navigate('/admin/login');
   };
 
   // Mock data for chart based on menu categories

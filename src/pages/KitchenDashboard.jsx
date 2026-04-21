@@ -4,13 +4,23 @@ import { io } from 'socket.io-client';
 import { Clock, CheckCircle2, Flame, Bell, ChevronRight } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
-const socket = io(API_URL || window.location.origin);
+useEffect(() => {
+  const socket = io(API_URL || window.location.origin);
+
+  socket.on('newOrder', (newOrder) => {
+    setOrders(prev => [newOrder, ...prev]);
+  });
+
+  return () => {
+    socket.disconnect(); // VERY IMPORTANT
+  };
+}, []);
 
 const KitchenDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem('token');
   const authConfig = { headers: { Authorization: `Bearer ${token}` } };
 
   useEffect(() => {
@@ -41,7 +51,7 @@ const KitchenDashboard = () => {
 
   const updateStatus = async (orderId, newStatus) => {
     try {
-      await API.put(`${API_URL}/api/orders/${orderId}/status`, { status: newStatus }, authConfig);
+      await API.put('/api/orders/${orderId}/status', { status: newStatus }, authConfig);
       setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status: newStatus } : o));
     } catch (error) {
       alert('Failed to update status');
@@ -63,6 +73,12 @@ const KitchenDashboard = () => {
     return null;
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    window.location.href = '/admin/login'; 
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-10">
       <div className="flex justify-between items-center">
@@ -75,6 +91,13 @@ const KitchenDashboard = () => {
             <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
             <span className="font-bold text-slate-700">Live Connection</span>
           </div>
+
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold hover:bg-red-600 transition-all active:scale-[0.98]"
+          >
+            Logout
+          </button>
         </div>
       </div>
 

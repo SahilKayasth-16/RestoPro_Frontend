@@ -12,31 +12,32 @@ const Login = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
 
-    if (!token) return;
+  if (!token) return;
 
-    // Basic sanity check (prevents garbage redirect)
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
 
-      if (!payload.exp || payload.exp * 1000 < Date.now()) {
-        localStorage.clear();
-        return;
-      }
+    if (!payload.exp || payload.exp * 1000 < Date.now()) {
+      localStorage.clear();
+      return;
+    }
 
+    // ONLY redirect if user is NOT on login page intentionally
+    if (window.location.pathname !== '/admin/login') {
       if (role === 'admin') {
         navigate('/admin/dashboard');
       } else if (role === 'kitchen') {
         navigate('/kitchen');
       }
-
-    } catch (err) {
-      localStorage.clear();
     }
 
-  }, []);
+  } catch {
+    localStorage.clear();
+  }
+}, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

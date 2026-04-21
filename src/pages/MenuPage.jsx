@@ -131,7 +131,7 @@ const MenuPage = () => {
     }
   };
 
-  
+
 
   const filteredMenu = activeCategory === 'All'
     ? menu

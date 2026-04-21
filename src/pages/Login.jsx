@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import API from '../utils/axiosconfig';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, LogIn, ArrowLeft } from 'lucide-react';
 
@@ -42,7 +42,9 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await API.post(`${API_URL}/api/auth/login`, { username, password });
+      const { data } = await API.post('/api/auth/login', { username, password });
+
+      console.log("LOGIN RESPONSE", data);
      
       localStorage.setItem('token', data.token);
       localStorage.setItem('role', data.role);

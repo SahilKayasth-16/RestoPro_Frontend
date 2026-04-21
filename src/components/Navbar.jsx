@@ -9,6 +9,7 @@ const Navbar = () => {
   const isLoginPage = location.pathname === '/admin/login';
   const isAdminDashboard = location.pathname === '/admin/dashboard';
   const isKitchenDashboard = location.pathname === '/kitchen';
+  const isMainPage = location.pathname === '/';
 
   const handleProtectedNav = (path, allowedRoles) => {
     const token = localStorage.getItem('token');
@@ -47,6 +48,10 @@ const Navbar = () => {
             {/* Kitchen */}
             <button
               onClick={() => {
+                if (isMainPage) {
+                  alert("It is for internal use only.");
+                  return;
+                }
                 if (isKitchenDashboard) {
                   return; // Stay on same page
                 }
@@ -65,6 +70,10 @@ const Navbar = () => {
             {/* Admin */}
             <button
               onClick={() => {
+                if (isMainPage) {
+                  alert("It is for internal use only.");
+                  return;
+                }
                 if (isAdminDashboard) {
                   return; // Stay on same page
                 }

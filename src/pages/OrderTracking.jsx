@@ -15,7 +15,7 @@ const OrderTracking = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const { data } = await API.get('/api/orders/${orderId}');
+        const { data } = await API.get(`/api/orders/${orderId}`);
         setOrder(data);
       } catch (error) {
         console.error('Error fetching order:', error);

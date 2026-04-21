@@ -77,7 +77,7 @@ const MenuPage = () => {
 
   const fetchPastOrders = async () => {
     try {
-      const { data } = await API.get('/api/orders/table/${tableId}');
+      const { data } = await API.get(`/api/orders/table/${tableId}`);
       setPastOrders(data);
     } catch (error) {
       console.error('Error fetching past orders:', error);

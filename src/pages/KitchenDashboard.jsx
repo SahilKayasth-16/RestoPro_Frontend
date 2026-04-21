@@ -4,19 +4,9 @@ import { io } from 'socket.io-client';
 import { Clock, CheckCircle2, Flame, Bell, ChevronRight } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
-useEffect(() => {
-  const socket = io(API_URL || window.location.origin);
-
-  socket.on('newOrder', (newOrder) => {
-    setOrders(prev => [newOrder, ...prev]);
-  });
-
-  return () => {
-    socket.disconnect(); // VERY IMPORTANT
-  };
-}, []);
 
 const KitchenDashboard = () => {
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,23 +14,22 @@ const KitchenDashboard = () => {
   const authConfig = { headers: { Authorization: `Bearer ${token}` } };
 
   useEffect(() => {
+    const socket = io(API_URL);
     fetchOrders();
 
     socket.on('newOrder', (newOrder) => {
       setOrders(prev => [newOrder, ...prev]);
-      // Play a sound or notification here if desired
-      if (Notification.permission === 'granted') {
-        new Notification('New Order Received!', { body: `Table ${newOrder.tableId} placed an order.` });
-      }
     });
 
-    return () => socket.off('newOrder');
+    return () => {
+      socket.disconnect()
+    };
   }, []);
 
   const fetchOrders = async () => {
     try {
       const { data } = await API.get('/api/orders', authConfig);
-      // Filter out 'Served' orders for the kitchen view, or just show them at the bottom
+
       setOrders(data);
       setLoading(false);
     } catch (error) {
@@ -51,11 +40,18 @@ const KitchenDashboard = () => {
 
   const updateStatus = async (orderId, newStatus) => {
     try {
-      await API.put('/api/orders/${orderId}/status', { status: newStatus }, authConfig);
-      setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status: newStatus } : o));
+      await API.put(`/api/orders/${orderId}/status`, { status: newStatus }, authConfig);
+      setOrders(prev => 
+        prev.map(o => o._id === orderId ? { ...o, status: newStatus } : o)
+      );
     } catch (error) {
       alert('Failed to update status');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = '/admin/login';
   };
 
   const getStatusColor = (status) => {
@@ -73,11 +69,7 @@ const KitchenDashboard = () => {
     return null;
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    window.location.href = '/admin/login'; 
-  };
+  
 
   return (
     <div className="max-w-7xl mx-auto space-y-10">

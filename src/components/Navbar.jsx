@@ -7,6 +7,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const isLoginPage = location.pathname === '/admin/login';
+  const isAdminDashboard = location.pathname === '/admin/dashboard';
 
   const handleProtectedNav = (path, allowedRoles) => {
     const token = localStorage.getItem('token');
@@ -44,7 +45,13 @@ const Navbar = () => {
 
             {/* Kitchen */}
             <button
-              onClick={() => handleProtectedNav('/kitchen', ['admin', 'kitchen'])}
+              onClick={() => {
+                if (isAdminDashboard) {
+                  navigate('/admin/login');
+                } else {
+                  handleProtectedNav('/kitchen', ['admin', 'kitchen']);
+                }
+              }}
               className="text-slate-600 hover:text-primary-600 flex items-center gap-1 transition-colors"
             >
               <ChefHat className="w-5 h-5" />
@@ -53,7 +60,13 @@ const Navbar = () => {
 
             {/* Admin */}
             <button
-              onClick={() => handleProtectedNav('/admin/dashboard', ['admin'])}
+              onClick={() => {
+                if (isAdminDashboard) {
+                  // Stay on same page
+                  return;
+                }
+                handleProtectedNav('/admin/dashboard', ['admin']);
+              }}
               className="text-slate-600 hover:text-primary-600 flex items-center gap-1 transition-colors"
             >
               <LayoutDashboard className="w-5 h-5" />
